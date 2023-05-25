@@ -6,6 +6,7 @@ import pandas as pd
 import scipy.io as sio
 from sklearn import preprocessing
 from scipy.signal import butter, lfilter
+import pickle as pkl
 
 
 def butter_bandpass(lowcut, highcut, fs, order=5):
@@ -23,7 +24,10 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
 
 
 def read_file(file):
-    data = sio.loadmat(file)
+    with open(file, 'rb') as f:
+        data = pkl.load(f, encoding = 'latin1')
+
+    # data = sio.loadmat(file)
     data = data['data']
     # print(data.shape)
     return data
@@ -115,8 +119,10 @@ def decompose(file):
 
 def get_labels(file):
     # 0 valence, 1 arousal, 2 dominance, 3 liking
-    valence_labels = sio.loadmat(file)["labels"][:, 0] > 5  # valence labels
-    arousal_labels = sio.loadmat(file)["labels"][:, 1] > 5  # arousal labels
+    with open(file, 'rb') as f:
+        data = pkl.load(f, encoding = 'latin1')
+    valence_labels = data["labels"][:, 0] > 5  # valence labels
+    arousal_labels = data["labels"][:, 1] > 5  # arousal labels
     final_valence_labels = np.empty([0])
     final_arousal_labels = np.empty([0])
     for i in range(len(valence_labels)):
@@ -143,9 +149,9 @@ def feature_normalize(data):
 
 
 if __name__ == '__main__':
-    dataset_dir = "/mnt/nvme0n1p1/EEG/DEAP/data/data_preprocessed_matlab/"
+    dataset_dir = "/home/hyojinju/multi-channel-eeg-deep-cnn-emotion-recognition/src/eeg_data/DEAP/"#/mnt/nvme0n1p1/EEG/DEAP/data/data_preprocessed_matlab/"
 
-    result_dir = "/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/all_0.5/"
+    result_dir = "./all_0.5/" #"/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/all_0.5/"
     if os.path.isdir(result_dir) == False:
         os.makedirs(result_dir)
 

@@ -7,9 +7,13 @@ import os
 import math
 import sys
 
+import pickle as pkl
+
 
 def read_file(file):
     file = sio.loadmat(file)
+    # with open(file, 'rb') as f:
+    #     data = pkl.load(f)
     trial_data = file['data']
     base_data = file["base_data"]
     return trial_data, base_data, file["arousal_labels"], file["valence_labels"]
@@ -69,14 +73,14 @@ def pre_process(path, y_n):
 
 
 if __name__ == '__main__':
-    dataset_dir = "/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/all_0.5/"
+    dataset_dir = "/home/hyojinju/4D-CRNN/DEAP/all_0.5/"#"/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/all_0.5/"
     use_baseline = "yes"
     if use_baseline == "yes":
-        result_dir = "/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/with_base_0.5/"
+        result_dir = "/home/hyojinju/4D-CRNN/DEAP/with_base_0.5/"#"/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/with_base_0.5/"
         if os.path.isdir(result_dir) == False:
             os.makedirs(result_dir)
     else:
-        result_dir = "/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/without_base_0.5/"
+        result_dir = "/home/hyojinju/4D-CRNN/DEAP/without_base_0.5/"#"/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/without_base_0.5/"
         if os.path.isdir(result_dir) == False:
             os.makedirs(result_dir)
 

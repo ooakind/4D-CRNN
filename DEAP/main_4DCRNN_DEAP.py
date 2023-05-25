@@ -1,16 +1,17 @@
 import numpy as np
 import scipy.io as sio
 import os
-from keras.utils import to_categorical
+from keras.utils.np_utils import to_categorical
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 
-from keras.layers import Input, Conv2D, MaxPooling2D, Dropout
-from keras.layers import Flatten, Dense, Concatenate, Reshape, LSTM
-from keras.models import Sequential, Model
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Dropout
+from tensorflow.keras.layers import Flatten, Dense, Concatenate, Reshape, LSTM
+from tensorflow.keras.models import Sequential, Model
 
 import keras
-# import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 from keras import backend as K
 import time
 from sklearn.model_selection import StratifiedKFold
@@ -32,12 +33,12 @@ short_name = ['01', '02', '03', '04', '05', '06', '07', '08', '09',
               '28', '29', '30', '31', '32']
 
 # 45次实验分别进行10倍交叉验证，取平均
-dataset_dir = "/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/with_base_0.5/"
+dataset_dir = "/home/hyojinju/4D-CRNN/DEAP/with_base_0.5/" #"/home/kaka/Desktop/sfy_file/eeg_emotion/nonCrossSubject/data/DEAP/with_base_0.5/"
 for i in range(len(short_name)):
     K.clear_session()
     start = time.time()
     print("\nprocessing: ", short_name[i], "......")
-    file_path = os.path.join(dataset_dir, 'DE_s'+short_name[i])
+    file_path = os.path.join(dataset_dir, 'DE_s'+short_name[i]+'.dat')
     file = sio.loadmat(file_path)
     data = file['data']
     y_v = file['valence_labels'][0]
@@ -99,8 +100,8 @@ for i in range(len(short_name)):
         # model.summary()
 
         # Compile model
-        model.compile(loss=keras.losses.categorical_crossentropy,
-                      optimizer=keras.optimizers.Adam(),
+        model.compile(loss=tf.keras.losses.categorical_crossentropy,
+                      optimizer=tf.keras.optimizers.Adam(),
                       metrics=['accuracy'])
         # Fit the model
         x_train = one_falx[train]
